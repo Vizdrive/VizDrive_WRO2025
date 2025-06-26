@@ -12,13 +12,30 @@ VizDrive's mechanical design prioritizes precise and stable locomotion, integrat
 * **Rear-Wheel Drive (RWD) Configuration**: The robot utilizes a RWD setup where a single DC motor drives the rear wheels via a solid axle. Front-wheel steering is achieved through a servo-controlled mechanism.
   * **Propulsion Motor**: A **Hobby Gearmotor with a 48:1 gearbox** is employed for the rear drive, selected for its ample torque suitable for various terrains.
   * **Steering Actuator**: A **Servo Motor SG90** is used to precisely control the angular position of the front steering wheels.
+ 
+<img src="./../assets/model_photos/3d_modeling_design.png" width="500">
+
 * **Light Frame Chassis**: The chassis is engineered as a lightweight beam structure. This compact design enhances driving precision and overall durability.
+
+<img src="./../assets/model_photos/light_frame.png" width="500">
+
 * **Tolerance Management**: Strategic variations in manufacturing tolerances were applied during part design:
   * **Snug Fit**: Components secured by screws are designed for a tight fit to ensure rigidity.
   * **Higher Tolerance**: Wheel and steering mechanisms incorporate greater tolerance. This allows for slight movement, reducing friction, and inadvertently contributes to a degree of passive suspension, which helps in accommodating minor ground irregularities and improving stability.
+
+<img src="./../assets/model_photos/tolerance.png" width="500">
+
 * **Caster Angle**: To mitigate any inherent imprecision arising from steering tolerances, a **caster angle of 10°** has been implemented. This geometric arrangement naturally biases the steering wheels to return to a centered, straight-ahead position, improving straight-line tracking stability.
+
+<img src="./../assets/model_photos/caster_angle.png" width="500">
+
 * **Steering Angle Capability**: The steering system is designed to achieve a **35-degree turn in each direction**. This range enables sharp maneuvers, including specialized actions like parallel parking.
+
+<img src="./../assets/model_photos/steering_angle.png" width="500">
+
 * **Screw Orientation**: Screws used in critical drivetrain assemblies are oriented to self-tighten as the robot moves forward. This design detail prevents screws from loosening and wheels from detaching due to friction, a particularly important consideration for 3D-printed hub designs that offer bidirectional screw orientation options.
+
+<img src="./../assets/model_photos/screw_orientation.png" width="500">
 
 ---
 
