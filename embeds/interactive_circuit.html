@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Circuit with Cirkit</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .embed-container {
+            position: relative;
+            width: 100%;
+            padding-top: calc(max(56.25%, 400px));
+        }
+        .embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cirkit Circuit Diagram</h1>
+    <p>Click on "Explore this Circuit" to interact with the model and access the Cirkit chatbot. </p>
+    <div class="embed-container">
+        <iframe src="https://app.cirkitdesigner.com/project/90a9a3ae-7140-4797-8f30-53fa0749d221?view=interactive_preview"></iframe>
+    </div>
+    <p style="margin-top: 5px;">Edit this project with <a href="https://app.cirkitdesigner.com/project/90a9a3ae-7140-4797-8f30-53fa0749d221" target="_blank">Cirkit Designer</a>.</p>
+    <p><a href="javascript:history.back()">Back to main page</a></p>
+</body>
+</html>
