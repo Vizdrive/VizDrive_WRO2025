@@ -28,7 +28,7 @@ You can use this index to navigate through our robot's documentation. Each docum
   * [Circuit Interactive Design (Cirkit)](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_circuit)
 * [**3. Software Architecture**](./docs/03_software_architecture.md)
   * Overview of software libraries, core functionalities, and code structure.
-  * [Autonomous Driving Code](./src/main_control/obstacle_avoidance)
+  * [Autonomous Driving Code](./src/main_control/Vizdrive_WRO_code.ino)
 * [**4. Sensors and Pin Configuration**](./docs/04_sensors_and_pin_configuration.md)
   * In-depth review of each sensor, its role in the functionality, and Arduino pin assignments.
   * [Sensors Test Codes](./src/test_code/)
@@ -36,7 +36,7 @@ You can use this index to navigate through our robot's documentation. Each docum
   * Focuses on the robot's motion system, motor configuration, and steering mechanisms.
 * [**6. PID Control for the Gyroscope**](./docs/06_pid_gyroscope_control.md)
   * Explains the MPU gyroscope implementation and PID control for trajectory stability.
-  * [MPU Calibration Code](./src/main_control/mpu_orientation_control/mpu_calibration.ino)
+  * [MPU Calibration Code](./src/main_control/mpu_orientation_control/mpu_calibration)
   * [MPU Calibration Data Graph](./assets/data_graphs/mpu_calibration_graph.png)
 * [**7. Computer Vision Functions with PixyCam 2.1**](./docs/07_pixycam_computer_vision.md)
   * Covers the PixyCam's vision-based obstacle evasion.
