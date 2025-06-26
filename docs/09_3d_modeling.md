@@ -34,7 +34,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
 
 * **Description:** The primary structural frame, designed to be lightweight yet rigid, providing essential mounting points for motors, sensors, and the main controller.
 * **3D Model (STL):** [Chassis](./../models/chassis/chassis.stl)
-* **Interactive 3D Model:** [Chassis Embed](.)
+* **Interactive 3D Model:** [Chassis Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_chassis)
 * **Printing Parameters:**
   * Infill Type: Honeycomb
   * Infill Density: 15%
@@ -49,7 +49,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
 
 * **Description:** Custom-designed rims precisely shaped to fit into the wheel hubs.
 * **3D Model (STL):** [Wheels](./../models/wheels/wheel_rims.stl)
-* **Interactive 3D Model:** [Wheels Embed](.)
+* **Interactive 3D Model:** [Wheels Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_rims)
 * **Printing Parameters:**
   * Infill Type: Honeycomb
   * Infill Density: 20%
@@ -64,7 +64,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
 
 * **Description:** Hubs designed to connect directly to the steering rod, incorporating integrated screws to securely hold the wheels in place.
 * **3D Model (STL):** [Wheel Hub](./../models/wheels/wheel_hub.stl)
-* **Interactive 3D Model:** [Wheel Hub Embed](.)
+* **Interactive 3D Model:** [Wheel Hub Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_hub)
 * **Printing Parameters:**
   * Infill Type: Honeycomb
   * Infill Density: 15%
@@ -79,7 +79,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
 
 * **Description:** A precisely designed wheel featuring 16 distinct markings or slots, intended for use with an optical encoder sensor to ensure accurate odometry (distance and speed measurement). A standard rear wheel without an encoder rim is also used.
 * **3D Model (STL):** [Wheel Encoder](./../models/wheels/encoder_wheel.stl)
-* **Interactive 3D Model:** [Encoder Wheel Embed](.)
+* **Interactive 3D Model:** [Encoder Wheel Embed]([.](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_rear_wheels))
 * **Printing Parameters:**
   * Infill Type: Honeycomb
   * Infill Density: 20%
@@ -94,7 +94,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
 
 * **Description:** Components for the steering rods that connect to the wheels, along with a camera mount designed with a slight 15° pitch angle for optimal PixyCam positioning.
 * **3D Model (STL):** [Steering Rods](./../models/steering/steering_rods.stl)
-* **Interactive 3D Model:** [Steering Rods Embed](.)
+* **Interactive 3D Model:** [Steering Rods Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_steering_rods)
 * **Printing Parameters:**
   * Infill Type: Honeycomb
   * Infill Density: 15%
