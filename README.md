@@ -25,7 +25,7 @@ You can use this index to navigate through our robot's documentation. Each docum
 * [**2. Hardware and Components of the Robot**](./docs/02_hardware_components.md)
   * Detailed specifications of all integrated electronic and mechanical hardware.
   * [General Electromechanical Diagram](./schemes/electromechanical_diagram.png)
-  * [Circuit Interactive Design (Cirkit)](https://alexp7608.github.io/VizDrive-pruebas/embeds/interactive_circuit.html)
+  * [Circuit Interactive Design (Cirkit)](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_circuit)
 * [**3. Software Architecture**](./docs/03_software_architecture.md)
   * Overview of software libraries, core functionalities, and code structure.
   * [Autonomous Driving Code](./src/main_control/obstacle_avoidance)
