@@ -43,7 +43,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
   * Bed Temperature: 60°C
   * Print Speed: 150mm/s
 
-![Chassis Model](./../models/chassis/chassis.png)
+<img src="./../assets/model_photos/chassis.png" width="500">
 
 ### Front Wheel Rims
 
@@ -58,7 +58,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
   * Bed Temperature: 60°C
   * Print Speed: 150mm/s
 
-![Rims Model](./../models/wheels/Rims.png)
+<img src="./../assets/model_photos/rims.png" width="500">
 
 ### Front Wheel Hubs with Screws
 
@@ -73,8 +73,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
   * Bed Temperature: 60°C
   * Print Speed: 150mm/s
 
-
-![Rims Model](./../models/wheels/Hubs.png)
+<img src="./../assets/model_photos/wheel_hub.png" width="500">
 
 ### Encoder Wheel and Rear Wheel
 
@@ -89,7 +88,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
   * Bed Temperature: 60°C
   * Print Speed: 150mm/s
 
-  ![Rims Model](./../models/wheels/RearWheels.png)
+<img src="./../assets/model_photos/encoder_wheel.png" width="500">
 
 ### Steering Rods and Camera Support
 
@@ -104,7 +103,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
   * Bed Temperature: 60°C
   * Print Speed: 150mm/s
 
-![Rims Model](./../models/steering/SteeringandCamera.png)
+<img src="./../assets/model_photos/steering_rods.png" width="500">
 
 ### 3D Printing Process
 
