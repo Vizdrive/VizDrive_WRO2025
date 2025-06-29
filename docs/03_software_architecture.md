@@ -47,8 +47,11 @@ For detailed explanations of these functions, refer to [**Robot Mobility**](./05
 
 This module employs ultrasonic sensors to measure real-time distances to surrounding environmental features, primarily for maintaining optimal positioning relative to walls.
 
-* **`getAvgDistance(sonar)`**: Computes an average distance from multiple pings using a `NewPing` object, effectively reducing noise in measurements.
-* **`recentreUltrasonic()`**: Analyzes distance readings from side-mounted ultrasonic sensors. It adjusts the robot's steering to correct its trajectory and maintain a centered position between walls when deviations greater than (`diff_threshold`) are detected, especially after obstacle avoidance.
+* **`getDistance(sonar)`**: Computes and filters distance measurements from multiple pings using a `NewPing` object, effectively reducing noise and enhancing precision in measurements.
+* **`centreOnStart()`**: Analyzes distance readings from side-mounted ultrasonic sensors. It calculates the necessary pulses to center the robot according to both wall distances and the servo steering angle, and executes the number of pulses adjusting the robot's steering angle to correct its position.
+* **`avoidWall()`**: If the distance to the walls differ with the expected maximum and minimum thresholds, the robot adjustes the target yaw for gyroscopic correction. This function has a cooldown managed by **`correctionCooldown()`** to avoid repeating a correction constantly.
+
+For a more detailed analysis of the ultrasonic sensors integration and noise filtering, refer to [**Ultrasonic Distance Sensing**](./08_ultrasonic_distance_sensing.md).
 
 ### Vision-Based Obstacle Evasion
 
@@ -88,7 +91,7 @@ Two digital TCS3200 sensors, positioned on the robot's sides, are used primarily
 
 * All color detection relies on empirically tuned RGB intensity thresholds (0-255) for accurate color identification under varying conditions.
 
-For an in-depth explanation of color sensor operation, calibration, and detection logic, refer to [**Color Detection Functions**](./08_color_detection.md).
+For an in-depth explanation of color sensor operation, calibration, and detection logic, refer to [**Color Detection Functions**](./09_color_detection.md).
 
 ### Orientation Control
 
@@ -164,6 +167,7 @@ The robot's dynamic operational state is managed through a set of global boolean
 | `lapCompletedCount`   | `unsigned int`  | Tracks the total number of completed laps. Upon reaching 4 laps, the robot transitions to searching for the parking magenta wall. |
 | `SystemShutdown`      | `bool`          | When set to `true`, this flag triggers `checkForShutdown()`, which forcefully stops the motors (`stopBrake()`) and enters an infinite loop, effectively halting all robot activity. |
 | `turningInProgress`   | `bool`          | Prevents re-triggering a turn while one is actively being executed. It is set to `true` upon floor color detection and turn initiation, and `false` when `abs(getYawError())` is within `TURN_THRESHOLD`, signaling turn completion. |
+| `correctionState`     | `bool`          | Flag to avoid duplications on the ultrasonic correction by managing an action cooldown. |
 | `turnTargetYaw`       | `float`         | Stores the yaw angle the robot aims to achieve during a turn, calculated as `getCurrentYaw() + 90.0 * direction`. |
 
 ---
