@@ -91,9 +91,9 @@ NewPing sonarRight(US_RIGHT_TRIG, US_RIGHT_ECHO, MAX_DISTANCE); // Right ultraso
 
   4. **Result**: The final average is calculated from the `sum` of the `filteredCount` readings, providing a highly **reliable and noise-corrected distance measurement**. For a comparison between **raw vs filtered measurement**, you can refer to the data analysis on ultrasonic sensors' calibration. Here you can visualize the difference between the error dispersion when applying our filter to an ultrasonic sensor measuring the same distance.
 
-![Data Visualization: Raw vs Filtered Ultrasonic Measurements](./../assets/data_graphs/ultrasonic_data_graph.png/)
+    ![Data Visualization: Raw vs Filtered Ultrasonic Measurements](./../assets/data_graphs/ultrasonic_data_graph.png/)
 
-For the complete data recolection and analysis, refer to: [Data Graphs and Analysis](./../assets/data_graphs/)
+    For the complete data recolection and analysis, refer to: [Data Graphs and Analysis](./../assets/data_graphs/)
 
 ## 8.3 Recentering Logic (`void recentreOnStart()`)
 
