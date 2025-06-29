@@ -19,7 +19,7 @@ Visit the embed: [Chassis Embed](https://vizdrive.github.io/VizDrive_WRO2025/emb
 ### 1. [Steering Rod an Camera Support](./steering/steering_rods.stl)
 <img src="./steering/SteeringandCamera.png" width="500">
 
-Visit the embed: [Chassis Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_steering_rods)
+Visit the embed: [Steering Rod and Camera Support Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_steering_rods)
 
 ## 3. Wheels Models
 
