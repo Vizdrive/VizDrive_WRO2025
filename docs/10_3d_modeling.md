@@ -1,8 +1,8 @@
-# 9. 3D Modeling and Mechanics
+# 10. 3D Modeling and Mechanics
 
 This section details the comprehensive approach to the mechanical design and fabrication of the VizDrive robot. Our methodology emphasizes precision, durability, and a lightweight structure.
 
-## 9.1 3D Modeling Tool: Blender
+## 10.1 3D Modeling Tool: Blender
 
 We selected **Blender** as our primary 3D modeling software.
 
@@ -16,7 +16,7 @@ Our mechanical design workflow involved an iterative process:
 4. **Iterative Refinement:** Physical prototypes were printed, their fit and function rigorously tested, and necessary design adjustments were iteratively made in Blender based on the empirical results.
 5. **STL Export:** Finalized designs were exported as `.stl` files, the industry-standard format for 3D printing.
 
-## 9.2 Mechanical Characteristics and Design Principles
+## 10.2 Mechanical Characteristics and Design Principles
 
 The mechanical design of VizDrive is characterized by a focus on lightness, precision, and durability.
 
@@ -26,7 +26,7 @@ The mechanical design of VizDrive is characterized by a focus on lightness, prec
 * **Steering Angle:** The robot's steering system is engineered to achieve a **45-degree angle in each direction**, enabling sharp turns. This capability directly addresses complex maneuvers such as parallel parking, which are often part of the competition.
 * **Screw Orientation:** Screws are specifically oriented to tighten during forward motion of the robot. This design detail prevents wheels from dislodging if excessive friction causes screws to loosen, ensuring continuous operation. The 3D files for the hubs include screw designs for both orientations to facilitate this.
 
-## 9.3 3D Printing and Parameters
+## 10.3 3D Printing and Parameters
 
 All custom mechanical parts for VizDrive were designed in Blender and fabricated using **PLA (Polylactic Acid)** filament via a **Creality Ender 3 3D printer**. PLA was selected for its ease of printing and sufficient strength for the application. While the following parameters are our standard settings, minor adjustments may be made for optimization.
 
@@ -105,7 +105,7 @@ All custom mechanical parts for VizDrive were designed in Blender and fabricated
 
 <img src="./../assets/model_photos/steering_rods.png" width="500">
 
-### 3D Printing Process
+##10.4 3D Printing Process
 
 The fabrication process utilizing the Creality Ender 3 3D printer involved the following steps:
 
