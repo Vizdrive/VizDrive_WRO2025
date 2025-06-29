@@ -22,4 +22,4 @@ The graph shows how the error dispersion changes when applying our filter to an 
 
 ![Ultrasonic Sensors Data Graph](ultrasonic_data_graph.png)
 
-For more information on the Ultrasonic Sensor suite and Artificial Vision, refer to: [7. PixycCam and Computer Vision](./../../docs/07_pixycam_computer_vision.md)
+For more information on the Ultrasonic Sensor suite, refer to: [8. Ultrasonic Distance Sensing](./../../docs/08_ultrasonic_distance_sensing.md)
