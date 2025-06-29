@@ -115,7 +115,8 @@ const int SERVO_RIGHT = SERVO_STRAIGHT + SERVO_MAX; // Maximum servo angle for e
   * `angle`: An integer representing the desired servo position in degrees (0-180).
 * **Operation**:
   * `steeringServo.write(angle);`: Sends the `angle` command to the servo using the `Servo.h` library.
-* **Safety**: The `angle` value is always constrained by calling functions (e.g., `keepOrientation()`, `handleEvasion()`) to remain within `SERVO_LEFT` and `SERVO_RIGHT` boundaries. This prevents over-rotation and physical interference with the chassis.
+  * `angle = constrain(angle, SERVO_LEFT, SERVO_RIGHT);`: The `angle` value is constrained to remain within `SERVO_LEFT` and `SERVO_RIGHT` boundaries.
+* **Safety**: It is important to constrain the angle into the maximum boundaries. This prevents over-rotation and physical interference with the chassis.
 
 #### `void performParking()`
 
