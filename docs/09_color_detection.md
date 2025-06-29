@@ -1,10 +1,10 @@
-# 8. Color Sensors for Circuit Perception
+# 9. Color Sensors for Circuit Perception
 
 VizDrive's autonomous navigation and mission completion rely heavily on its ability to perceive crucial color cues from the competition circuit. This section provides a detailed explanation of the various color sensors implemented, their specific functions, communication protocols, and the associated data processing techniques.
 
 ---
 
-## 8.1 Floor Color Sensor (I2C - Adafruit TCS34725)
+## 9.1 Floor Color Sensor (I2C - Adafruit TCS34725)
 
 A dedicated TCS34725 color sensor is mounted on the underside of the robot. Its primary function is to detect colored lines on the circuit mat, which serve as strategic indicators for turns.
 
@@ -57,7 +57,7 @@ const int ORANGE_BLUE_THRESHOLD = 120;
 
 ---
 
-## 8.2 Wall Color Sensors (Digital - TCS3200)
+## 9.2 Wall Color Sensors (Digital - TCS3200)
 
 Two digital TCS3200 color sensors are strategically mounted on the sides of the robot. These sensors are primarily used for detecting the magenta "parking signal" on walls during the final phase of the mission.
 
@@ -132,7 +132,7 @@ const int MAGENTA_BLUE_THRESHOLD = 150;
 
 ---
 
-## 8.3 Unified Color Detection API (`bool colorDetected()`)
+## 9.3 Unified Color Detection API (`bool colorDetected()`)
 
 To simplify the main program loop's logic, a unified function is provided to check for the currently relevant color signal.
 
