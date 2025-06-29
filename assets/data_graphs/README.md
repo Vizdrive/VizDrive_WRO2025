@@ -20,6 +20,6 @@ Our robot needs to avoid outliers to maintain a consistent performance. Even one
 To prevent this malfunction, two filters are implemented for ultrasonic sensors: an outlier filter (similar to a median filter) and a filter to ignore very distant or very close values.
 The graph shows how the error dispersion changes when applying our filter to an ultrasonic sensor, measuring the same length.
 
-![Ultrasonic Sensors Data Graph](US_data_graph.png)
+![Ultrasonic Sensors Data Graph](ultrasonic_data_graph.png)
 
 For more information on the Ultrasonic Sensor suite and Artificial Vision, refer to: [7. PixycCam and Computer Vision](./../../docs/07_pixycam_computer_vision.md)
