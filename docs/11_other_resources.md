@@ -1,13 +1,13 @@
-# 10. Other Resources
+# 11. Other Resources
 
 This section provides links to supplementary materials, diagrams, and other relevant resources that offer further insight into the VizDrive robot's design, construction, and operation.
 
-## Electrical Schematics and Circuit Diagrams
+## 11.1 Electrical Schematics and Circuit Diagrams
 
 * **Full Circuit and Diagram (PDF):** A comprehensive diagram illustrating all electrical connections and component placements within the robot's circuit.
   * [View Diagram (PDF)](./../schemes/circuit_diagram.pdf)
 
-## 3D Models
+## 11.2 3D Models
 
 All custom mechanical parts designed for VizDrive are available as STL files. These models can be used for replication, modification, or further study of the robot's physical structure.
 
@@ -22,12 +22,12 @@ All custom mechanical parts designed for VizDrive are available as STL files. Th
 * **Steering Rods and Camera Support:** Components for steering rods and the PixyCam mount.
   * [View 3D Model (STL)](./../models/steering/steering_rods.stl)
 
-## MPU Calibration Data Visualization
+## 11.3 MPU Calibration Data Visualization
 
 * **Accumulated Error vs. Number of Samples Graph:** This chart illustrates the empirical data collected during MPU calibration, demonstrating the reduction in accumulated error as the number of samples increases, guiding the selection of optimal calibration parameters.
   * [View Calibration Data Graph (PNG)](./assets/data_graphs/mpu_calibration_graph.png)
 
-## 09.4. Supplementary Media
+## 11.4 Supplementary Media
 
 * **Robot Images/Videos:**
 
