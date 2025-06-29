@@ -9,32 +9,32 @@ The designs included in this file directory are:
 
 ## 1. Chassis Model
 
-### 1. [Chassis](./models/chassis/chassis.stl)
-<img src="./models/chassis/Chassis.png" width="500">
+### 1. [Chassis](./chassis/chassis.stl)
+<img src="./chassis/Chassis.png" width="500">
 
 Visit the embed: [Chassis Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_chassis)
 
 ## 2. Steering
 
-### 1. [Steering Rod an Camera Support](./models/steering/steering_rods.stl)
-<img src="./models/steering/SteeringandCamera.png" width="500">
+### 1. [Steering Rod an Camera Support](./steering/steering_rods.stl)
+<img src="./steering/SteeringandCamera.png" width="500">
 
 Visit the embed: [Chassis Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_steering_rods)
 
 ## 3. Wheels Models
 
-### 1. [Wheel Hubs](./models/wheels/wheel_hub.stl)
-<img src="./models/wheels/Hubs.png" width="500">
+### 1. [Wheel Hubs](./wheels/wheel_hub.stl)
+<img src="./wheels/Hubs.png" width="500">
 
 Visit the embed: [Wheels Hub Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_hub)
 
-### 2. [Rear Wheels](./models/wheels/encoder_wheel.stl)
-<img src="./models/wheels/RearWheels.png" width="500">
+### 2. [Rear Wheels](./wheels/encoder_wheel.stl)
+<img src="./wheels/RearWheels.png" width="500">
 
 Visit the embed: [Rear Wheels Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_rear_wheels)
 
-### 3. [Wheel Rims](./models/wheels/wheel_rims.stl)
-<img src="./models/wheels/Rims.png" width="500">
+### 3. [Wheel Rims](./wheels/wheel_rims.stl)
+<img src="./wheels/Rims.png" width="500">
 
 Visit the embed: [Wheel Rims Embed](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_rims)
 
