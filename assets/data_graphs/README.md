@@ -1,6 +1,6 @@
 # Data Graphs
 
-This folder refers to the data graphs of out sensor suite calibration.
+This folder refers to the data graphs of our sensor suite calibration.
 
 ## MPU6050 Calibration and Data Analysis
 
