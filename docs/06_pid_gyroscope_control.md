@@ -130,11 +130,11 @@ These functions allow external modules (e.g., `state_logic`) to interact with an
   * **Returns**: The `yaw` float value in degrees.
   * **Usage**: Used by `state_logic` to calculate `turnTargetYaw` and evaluate turn completion.
 
-* **`float getYawError()`**:
+* **`float getAbsoluteYawError()`**:
 
-  * **Purpose**: Returns the difference between the `targetYaw` and the current `yaw`.
-  * **Returns**: The error value (`targetYaw - yaw`) in degrees. A positive value indicates the current `yaw` is less than `targetYaw`, and vice versa.
-  * **Usage**: Crucial for `state_logic` to determine if a turn has been successfully completed by checking if `abs(getYawError())` is less than `TURN_THRESHOLD`.
+  * **Purpose**: Returns the absolute difference between the `targetYaw` and the current `yaw`.
+  * **Returns**: The error value (`abs(targetYaw) - abs(yaw)`) in degrees.
+  * **Usage**: Crucial for the `completedTurn()` function to determine if a turn has been successfully completed by checking if `getAbsoluteYawError()` is less than `TURN_THRESHOLD`.
 
 ---
 
