@@ -66,10 +66,10 @@ You can use this index to navigate through our robot's documentation. Each docum
 
 All control and test codes are located in the `src/` folder.
 
-* [Autonomous Driving (Obstacle Avoidance)](./src/main_control/obstacle_avoidance)
+* [Autonomous Driving (Obstacle Avoidance)](./src/main_control/Vizdrive_WRO_code.ino/)
 * [Autonomous Driving (No Obstacle Avoidance)](./src/main_control/no_obstacle_avoidance.ino/)
-* [MPU Orientation Control (PID and Calibration)](./src/main_control/mpu_orientation_control/)
-* [Computer Vision (PixyCam 2.1)](./src/computer_vision/)
+* [MPU Orientation Control (PID and Calibration)](./src/mpu_orientation_control/)
+* [Computer Vision (PixyCam 2.1)](./src/computer_vision/computer_vision.ino/)
 * [Sensor Test Codes](./src/test_code/)
 
 ---
@@ -80,7 +80,7 @@ Files for 3D printed components are located in the `models/` folder in `.stl` fi
 To access interactive models of each component, hosted in GitHub pages, visit `embeds/`.
 
 * [Robot 3D Models](./models/)
-* [Interactive 3D Models](./embeds/)
+* [Interactive 3D Models]([./embeds/](https://vizdrive.github.io/VizDrive_WRO2025/embeds/))
 
 ---
 
@@ -88,7 +88,7 @@ To access interactive models of each component, hosted in GitHub pages, visit `e
 
 Flowcharts, circuits, and relevant data graphs.
 
-* [Flowcharts](./assets/flowcharts/flowchart.png)
+* [Operation Flowchart](./assets/flowcharts/flowchart.png)
 * [Calibration Data Graphs](./assets/data_graphs/)
 * [Additional Hardware Photos](./assets/hardware_photos/)
 
