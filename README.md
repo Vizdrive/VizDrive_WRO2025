@@ -41,12 +41,15 @@ You can use this index to navigate through our robot's documentation. Each docum
 * [**7. Computer Vision Functions with PixyCam 2.1**](./docs/07_pixycam_computer_vision.md)
   * Covers the PixyCam's vision-based obstacle evasion.
   * [Computer Vision Code](./src/computer_vision/pixycam_functions.ino)
-* [**8. Color Detection Functions**](./docs/08_color_detection.md)
+* [**8. Ultrasonic Distance Sensing**](./docs/08_ultrasonic_distance_sensing.md)
+  * Covers the distance measurement and wall avoidance with ultrasonic sensors, and the filters implemented to adjust precision.
+  * [Ultrasonic Sensor Data Analysis](./assets/data_graphs/Ultrasonic%20Sensors%20Data%20Analysis.xlsx)
+* [**9. Color Detection Functions**](./docs/09_color_detection.md)
   * Explains the color sensor's applications and calibration.
-* [**9. 3D Modeling and Fabrication**](./docs/09_3d_modeling.md)
+* [**10. 3D Modeling and Fabrication**](./docs/10_3d_modeling.md)
   * Details the 3D design process, mechanical characteristics, and fabrication parameters.
   * [3D Models STL](./models/)
-* [**10. Other Resources and Documentation**](./docs/10_other_resources.md)
+* [**11. Other Resources and Documentation**](./docs/11_other_resources.md)
   * Summarized documentation and additional relevant resources and materials.
 
 ---
