@@ -1,9 +1,9 @@
 # WRO-Vizdrive-2025
 
-![Vizdrive Logo)](./assets/model_photos/Vizdrive_logo.png)
-
 Welcome to the project repository for the **Panamanian 🇵🇦 Team VizDrive** for the **World Robot Olympiad (WRO)** 2025!
 Here you will find all the documentation, source code, images, and models related to our autonomous robot.
+
+![Vizdrive Logo)](./assets/model_photos/Vizdrive_logo.png)
 
 ## Project Summary
 
