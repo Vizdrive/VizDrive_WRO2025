@@ -1,6 +1,6 @@
 # Models Folder
 
-Here you can find all the .stl and .glb models of the wheels part of our robot.
+Here you can find all the .stl and .glb models of every 3D modeled part of our robot.
 
 The .glb models are used for the HTML embeds hosted in GitHub pages. 
 We designed these embeds for a more interactive visualization of the models and their colors in the real-life robot. However, the .stl files can also be visualized directly in GitHub.
