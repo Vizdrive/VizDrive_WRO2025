@@ -96,6 +96,7 @@ Flowcharts, circuits, and relevant data graphs.
 
 ## Team Members 🙋‍♂️🙋🙋‍♀️
 
-* Carlo Ho Ng
-* Alexis Palacios Ng
-* Aislinn Chawla Arora
+|                                                       |                                                              |                                                        |
+|:-----------------------------------------------------:|:-----------------------------------------------------------:|:-------------------------------------------------------:|
+| ![Alexis Palacios](./t-photos/alexis_1.jpg)           | ![Carlo Ho](./t-photos/carlo_1.jpg)                         | ![Aislinn Chawla](./t-photos/aislinn_1.jpg) |
+| **ALEXIS PALACIOS NG** <br> *Software Engineer* <br> Sensor Integration, Firmware Logic, Error Management, Data Analysis, GitHub Repository | **CARLO HO NG** <br> *Hardware Engineer* <br> Construction, Wiring, Circuit and PCB Design, Power Management, 3D Designing, Logo Designing | **AISLINN CHAWLA ARORA** <br> *Logistics and Assistance* <br> Photography, Competition Planning, Drafting, Social Media |
