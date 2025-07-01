@@ -11,7 +11,7 @@ On the other hand, the interactive circuit was designed using the **Cirkit Desig
 
 ## Visualize the different interactive components
 
-### [Interactive Circuit Design](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_circuit)
+### [Interactive Circuit Diagram](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_circuit)
 
 ### [Interactive Chassis](https://vizdrive.github.io/VizDrive_WRO2025/embeds/interactive_chassis)
 
@@ -68,7 +68,7 @@ The HTML codes creates a simple web page that displays an **interactive 3D model
   
 * **`<p><a href="javascript:history.back()">Go back to main page</a></p>`**: A simple paragraph with a link that, when clicked, uses JavaScript (`history.back()`) to navigate the user to the previous page in their browser history.
 
-## Interactive Circuit Design
+## Interactive Circuit Diagram
 
 This HTML code creates a simple web page designed to **embed an interactive circuit diagram** hosted on the Cirkit Designer platform.
 
