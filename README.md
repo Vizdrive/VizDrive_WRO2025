@@ -80,7 +80,7 @@ Files for 3D printed components are located in the `models/` folder in `.stl` fi
 To access interactive models of each component, hosted in GitHub pages, visit `embeds/`.
 
 * [Robot 3D Models](./models/)
-* [Interactive 3D Models](https://vizdrive.github.io/VizDrive_WRO2025/embeds/)
+* [Interactive 3D Models](./embeds/)
 
 ---
 
