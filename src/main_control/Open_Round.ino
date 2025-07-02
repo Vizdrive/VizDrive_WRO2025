@@ -12,7 +12,7 @@
 // DC motor PWM pins
 #define MOTOR_INA_PWM 4
 #define MOTOR_INB_PWM 5
-int motorSpeed = 200; // motor PWM value for velocity
+int motorSpeed = 180; // motor PWM value for velocity
 // Servomotor pin
 #define SERVO_PIN     6
 
@@ -25,15 +25,16 @@ int SERVO_RIGHT = SERVO_STRAIGHT + SERVO_MAX;
 // Defining the servomotor
 Servo steeringServo;
 
+int correctionFarCount = 0;
+int correctionCloseCount = 0;
+
 // IR encoder pin
 #define ENCODER_PIN   2
 volatile unsigned long encoderPulseCount = 0; // volatile variable for pulse count
 
-const int WHEEL_PERIMETER = 22; // cm
-const int PULSES_PER_REVOLUTION = 16; // PPR
+const float WHEEL_PERIMETER = 22.0; // cm
+const float PULSES_PER_REVOLUTION = 16.0; // PPR
 const float PULSES_PER_CM = PULSES_PER_REVOLUTION/WHEEL_PERIMETER;
-
-const float cos30deg = 0.866025;
 
 // 2. PID Control and Orientation
 
@@ -68,10 +69,10 @@ struct RGB {  // struct to store side-mounted color sensors' reads.
 
 // color sensor located at the bottom
 const int BLUE_RED_THRESHOLD =   80;   // blue color thresholds
-const int BLUE_GREEN_THRESHOLD = 85;
-const int BLUE_BLUE_THRESHOLD =  75;
-const int ORANGE_RED_THRESHOLD =   100; // orange color thresholds
-const int ORANGE_GREEN_THRESHOLD = 100;
+const int BLUE_GREEN_THRESHOLD = 80;
+const int BLUE_BLUE_THRESHOLD =  100;
+const int ORANGE_RED_THRESHOLD =   110; // orange color thresholds
+const int ORANGE_GREEN_THRESHOLD = 80;
 const int ORANGE_BLUE_THRESHOLD =  70;
 
 // Defining the i2c color sensor as "floorTcs"
@@ -106,15 +107,15 @@ bool turningInProgress = false; // variable to avoid duplicate color detections
 
 bool correctionState = false;  // variable to avoid repetitive ultrasonic corrections in one lap
 unsigned long lastCorrectionTime = 0; // variables for a correction cooldown
-const long correctionCooldownMillis = 2000;
+const long correctionCooldownMillis = 1200;
 
 float turnTargetYaw = 0.0;  // target yaw for turning
-const float TURN_THRESHOLD = 5.0; // tolerance threshold for turns
+const float TURN_THRESHOLD = 3.0; // tolerance threshold for turns
 int direction = 0;  // turn direction → -1: counterclockwise, +1: clockwise
 
 // Miscellaneous
 const int buttonPin = A0;
-const int ledPin = 30;  // indicator LED
+const int ledPin = 30; // indicator LED
 unsigned long lastUpdateTime = 0; // for main loop non-blocking delay
 unsigned long lastCentreUpdateTime = 0; // for centring non-blocking while loop
 
@@ -130,14 +131,13 @@ void setup() {
 
   waitForStartButton(); // wait for button press
   lastUpdateTime = millis();
-  centreOnStart();
 }
 
 void loop() {
   unsigned long now = millis(); // updates current time
 
   // Code executed at 20 Hz
-  if (now - lastUpdateTime < 50) return;  // if 50 ms have not passed, do not execute code
+  if (now - lastUpdateTime < 30) return;  // if 50 ms have not passed, do not execute code
   
   float dt = (now-lastUpdateTime)/1000.0; // time differential in seconds (for MPU6050)
   lastUpdateTime = now; // updates loop's last update time
@@ -193,9 +193,9 @@ void initOrientation() {
   Wire.begin(); // i2c connection to the MPU
   while (!mpu.begin()) {
    Serial.println("MPU6050 not found, trying again in 3 seconds...");
-   delay(3000);
+   (3000);
   }
-  Serial.println("MPU6050 initialized succesfully.")
+  Serial.println("MPU6050 initialized succesfully.");
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);  // sets the accelerometer's measurement range to ±8g
   mpu.setGyroRange(MPU6050_RANGE_500_DEG); // sets the gyroscope's measurement range to ±500 degrees/second.
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ); // configures the DLPF bandwidth to 21 Hz, to reduce high-frequency noise.
@@ -341,31 +341,45 @@ bool detectFloorColor() {
   int rn=r*255/c, gn=g*255/c, bn=b*255/c; // normalizes values with the total light (c), for different light levels adaptability
   
   // Debugging for color sensor
-  Serial.print("R: ");  Serial.println(rn);
+  /* Serial.print("R: ");  Serial.println(rn);
   Serial.print("G: ");  Serial.println(gn);
-  Serial.print("B: ");  Serial.println(bn);
+  Serial.print("B: ");  Serial.println(bn); */
 
   // For the first lap turn, defines direction:
-  if (lapTurnCount == 0 && bn>BLUE_BLUE_THRESHOLD) {  // if blue color is detected
+  if (lapTurnCount == 0 && bn>BLUE_BLUE_THRESHOLD && rn<BLUE_RED_THRESHOLD && gn<BLUE_GREEN_THRESHOLD) {  // if blue color is detected
     direction = -1; // blue: left direction (-1)
     // Serial.print("Dirección establecida a: ");  // debugging
     // Serial.println(direction);
     return true;
-  } else if (lapTurnCount == 0 && rn>ORANGE_RED_THRESHOLD) { // if orange color is detected
+  } else if (lapTurnCount == 0 && rn>ORANGE_RED_THRESHOLD && bn<ORANGE_BLUE_THRESHOLD && gn>ORANGE_GREEN_THRESHOLD) { // if orange color is detected
     direction = +1; // orange: right direction (+1)
     // Serial.print("Dirección establecida a: ");  // debugging
     // Serial.println(direction);
     return true;
   }
 
-  if (direction<0 && bn>BLUE_BLUE_THRESHOLD) return true; // returns true if a color detection matches the threshold
-  if (direction>0 && rn>ORANGE_RED_THRESHOLD) return true;
+  if (direction<0 && bn>BLUE_BLUE_THRESHOLD && rn<BLUE_RED_THRESHOLD && gn<BLUE_GREEN_THRESHOLD) return true; // returns true if a color detection matches the threshold
+  if (direction>0 && rn>ORANGE_RED_THRESHOLD && bn<ORANGE_BLUE_THRESHOLD && gn>ORANGE_GREEN_THRESHOLD) return true;
   return false;
 }
 
 // Function for turns when a color is detected
 void handleColorAction() {
   if (detectFloorColor() && !turningInProgress) { // if the a color is detected at the bottom, and there's no turning in progress...
+    if (lapTurnCount == 0) {  // brief delay during the first lap turn
+      lapTurnCount++; // lap turn counting
+      digitalWrite(ledPin, HIGH); // turns on the LED for visualization of states
+      safeDelay(500);
+    
+      turnTargetYaw = (turnTargetYaw + (90.0 * -direction));  // sets the target yaw to ± 90°, according to direction
+      setTargetYaw(turnTargetYaw);
+
+      turningInProgress = true; // flag for turning in progress, avoids color detection repetition
+      motorSpeed = 250; // accelerates during turns
+
+      return;
+    }
+
     lapTurnCount++; // lap turn counting
     digitalWrite(ledPin, HIGH); // turns on the LED for visualization of states
     
@@ -388,14 +402,8 @@ void completedTurn() {
     turningInProgress = false;
     correctionState = false;
 
-    motorSpeed = 145; // slows down for color detection
-    Serial.println("Turn completed...");
-
-    if (lapTurnCount == 12) { // if 3 laps are completed (4 lap turns = 1 lap)
-    safeDelay(500); // waits to arrive to the defined stopping area
-    stopBrake();  // stops the motors
-    while (1);  // stops the program
-    }
+    motorSpeed = 160; // slows down for color detection
+    // Serial.println("Turn completed..."); // debugging
   }
 }
 
@@ -417,18 +425,20 @@ void avoidWall(int correctionAmount) {
     // Debugging of ultrasonic distance data
     // Serial.print("Distance to wall: "); Serial.println(distance);
       
-    if(distance < 20 && distance != 0) { // if it is too close to he wall
+    if(distance < 15 && distance != 0) { // if it is too close to he wall
       turnTargetYaw = (turnTargetYaw + (correctionAmount*-direction)); // adjusts the target yaw to the left to correct deviations
       correctionState = true;
       setTargetYaw(turnTargetYaw);
       // Serial.println("Correcting trajectory, too close to the wall."); 
+      correctionFarCount += 1;
       lastCorrectionTime = millis(); // Registers the last correction time
     } 
       
-    else if (distance > 40 && distance != 0) {
+    else if (distance > 30 && distance != 0) {
       turnTargetYaw = (turnTargetYaw + (correctionAmount*direction)); // adjusts the target yaw to the right to correct deviations
       correctionState = true;
       setTargetYaw(turnTargetYaw);
+      correctionCloseCount += 1;
       lastCorrectionTime = millis(); // Registers the last correction time
       // Serial.println("Correcting trajectory, too far from the wall.");
     }
@@ -442,7 +452,7 @@ void avoidWall(int correctionAmount) {
 }
 
 void correctionCooldown() {
-  if (millis() - lastCorrectionTime > correctionCooldownMillis)) {
+  if (millis() - lastCorrectionTime > correctionCooldownMillis) {
     correctionState = false;
     // Serial.println("Correction cooldown passed... Correction state = false."); // debugging
   } else {
@@ -454,9 +464,9 @@ void correctionCooldown() {
 
 // Function to get distance, with a median filter for precision
 int getDistance(NewPing& sonar) { // uses the original sonar object
-  const int NUM_SAMPLES = 3;  // number of readings
-  const int MAX_VALID_DISTANCE = 80;  // maximum distance in cm
-  const int MIN_VALID_DISTANCE = 4; // minimum distance in cm
+  const int NUM_SAMPLES = 5;  // number of readings
+  const int MAX_VALID_DISTANCE = 100;  // maximum distance in cm
+  const int MIN_VALID_DISTANCE = 2; // minimum distance in cm
   const int STABILITY_THRESHOLD = 10; // disregards values outside the average range
   
   int samples[NUM_SAMPLES]; // defines an array to store readings
@@ -494,50 +504,17 @@ int getDistance(NewPing& sonar) { // uses the original sonar object
   return sum / filteredCount; // if there are many readings that passed the filter, returns the average
 } 
 
-void centreOnStart() {
-  // measures distance to both sides
-  int dl = sonarLeft.ping_cm();
-  int dr = sonarRight.ping_cm();
-
-  // calculates to difference, to center
-  int diff = dl - dr;
-  int centreAngle = (diff < 0) ? SERVO_RIGHT : SERVO_LEFT;  // if the measurement to the right is larger, adjust to the right; otherwise, adjust to the left
-
-  // calculates the necessary pulses to centre
-  int cm = ((abs(diff) / 2) / cos30deg);  // necessary cm to centre
-  int pulses = cm * PULSES_PER_CM;  // necessary pulses to centre
-  // Serial.print("Centre pulses: "); // debugging
-  // Serial.println(pulses);
-
-  encoderPulseCount = 0;
-  lastCentreUpdateTime = millis(); // Inicializa el tiempo para este bucle
-
-  setSteeringAngle(centreAngle); // sets the servo angle according to the distance to both sides
-  delay(50);
-  driveForward(200);  
-  
-  while (true) {
-    unsigned long now = millis(); // Tiempo actual para el cálculo de dt
-
-    if (now - lastCentreUpdateTime < 50) {
-      continue; // update the orientation every 50 ms
-    }
-    
-    float dt = (now - lastCentreUpdateTime) / 1000.0; // time differential in seconds
-    lastCentreUpdateTime = now; // updates the time for next iteration
-
-    // Updates the accumulated yaw
-    updateOrientation(dt);
-
-    // Checks the break condition
-    if (encoderPulseCount >= pulses) {
-      Serial.println("Centring completed...");
-      break;
-    }
-  }
-
 // State Logic Functions
 
+void checkForShutdown() {
+  if (lapTurnCount == 12) { // if 3 laps are completed (4 lap turns = 1 lap)
+      setSteeringAngle(SERVO_STRAIGHT); // goes straight forward
+      driveForward(145);  // slows down
+      safeDelay(2000); // waits to arrive to the defined stopping area
+      stopBrake();  // stops the motors
+      while (1);  // stops the program
+    }
+}
 void debugging() {
   Serial.print("Target yaw: ");   Serial.print(targetYaw);
   Serial.print("    Current Yaw: ");  Serial.println(yaw);
