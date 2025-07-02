@@ -35,7 +35,7 @@ The following table summarizes the primary pin assignments for all the component
 * **Functionality:** Operates on echolocation principles, emitting an ultrasonic pulse and measuring the time for its return echo to calculate distance. Used for obstacle avoidance.
 * **Role:** Four sensors are strategically placed:
   * **Front-Left & Front-Right:** Primary for detecting short distances to walls during evasion and avoid collisions.
-  * **Left & Right:** Used post-evasion to assist in re-centering the robot on its trajectory and correct MPU6050 large offsets after laps.
+  * **Left & Right:** Used to adjust the robot's position parallel to the walls, correcting MPU6050 large offsets after laps.
 * **Pin Configuration:**
   * `VCC`: Connected to Arduino `5V`.
   * `GND`: Connected to Arduino `GND`.
