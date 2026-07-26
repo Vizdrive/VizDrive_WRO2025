@@ -265,7 +265,7 @@ The system's autonomy is therefore governed by the 9V supply, after which rechar
 
 The robot utilizes a custom-made PCB, avoiding unnecessary clutter and improving overall order.
 
-<img src="./../assets/hardware_photos/SolderedPCB.jpg" height="250">
+<img src="./../assets/hardware_photos/SolderedPCB.jpg" height="500">
 
 You can also download the fixed circuit files: [kicad_pcb](../src/kicad_pcb).
 
