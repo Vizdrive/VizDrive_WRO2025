@@ -261,6 +261,13 @@ This battery ensures clean and stable voltage delivery for sensors and the contr
 
 The system's autonomy is therefore governed by the 9V supply, after which recharging or replacement is required.
 
+## 2.8 Circuit Design
+
+The robot utilizes a custom-made PCB, avoiding unnecessary clutter and improving overall order.
+
+<img src="./../assets/hardware_photos/SolderedPCB.jpg" height="250">
+
+You can also download the fixed circuit files: [kicad_pcb](../src/kicad_pcb).
 
 ---
 
