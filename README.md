@@ -142,12 +142,6 @@ Sensor Integration, <br>Firmware Architecture, <br>Code Logic, <br>Error Managem
 
 ---
 
-## Branding
-
-This is a new [section](./docs/11_other_resources.md#118-branding) for the 2026 season, where we explain our name and visuals.
-
----
-
 ## Special Thanks
 
 We are profoundly thankful to everyone who has supported us on our journey so far! We're incredibly grateful to our school administration for providing the resources and trust needed to pursue this challenge. To our teachers, thank you for your guidance and advice during our preparation; we especially appreciate your patience with our absences for robot practices (we promise to catch up on our assignments after the Olympiad 😅). A special shout-out to our friends who spent their free time supporting us, cheering us on, and helping us stay up to date. To our amazing parents, your assurance and belief in us have been the foundation of our efforts, allowing us to participate even though it meant missing many classes. And last but certainly not least, to our incredible coach, Professor Agustín Rogelio Orro Pérez. Even while mentoring five other teams, you still found time to guide us through it all. Your expertise, leadership, and dedication have been invaluable for us.
