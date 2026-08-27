@@ -53,7 +53,7 @@ You can use this index to navigate through our robot's documentation. Each docum
   * Explains the MPU gyroscope implementation and PID control for trajectory stability.
   * [MPU Calibration Code](./src/mpu_orientation_control/mpu_calibration/mpu_calibration.ino)
   * [MPU Calibration Data Graph](./assets/data_graphs/MPU%20Calibration%20Data%20Analysis.xlsx)
-* [**7. Computer Vision Functions with PixyCam 2.1**](./docs/07_computer_vision.md)
+* [**7. Computer Vision Functions**](./docs/07_computer_vision.md)
   * Covers the PixyCam's vision-based obstacle evasion.
   * [Computer Vision Code](./src/computer_vision/computer_vision.ino)
 * [**8. Ultrasonic Distance Sensing and PID**](./docs/08_ultrasonic_distance_sensing.md)
