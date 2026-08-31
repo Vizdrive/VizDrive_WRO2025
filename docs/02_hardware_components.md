@@ -37,7 +37,7 @@ This section provides a detailed enumeration and description of all hardware com
 
 <img src="../assets/hardware_photos/servo.jpg" width="300">
 
-### **Component:** **Mini L298N Motor Driver**
+### **Component:** **Mini MX1508 Motor Driver**
 
 * **Quantity:** 1
 * **Logic Voltage:** 5V
