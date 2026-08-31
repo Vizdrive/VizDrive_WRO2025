@@ -7,6 +7,6 @@ Unity was an ideal choice due to its robust PhysX physics engine (simulating col
 
 Testing before physical prototyping is essential for any robot build, and [simulation with Unity](https://unity.com/es/blog/engine-platform/robotics-simulation-is-easy-as-1-2-3) is becoming more and more common for modern robot engineering.
 
-Visit the [**Unity Web Player**](https://vizdrive.github.io/VizDrive_WRO2025/embeds/Unity_simulator/) preview hosted on GitHub pages. Please note that this is an optimized and simplified version, necessary due to the the maximum file size in GitHub.
+Visit the [**Unity Web Player**](https://vd-wro.github.io/VD26/embeds/Unity_simulator/) preview hosted on GitHub pages. Please note that this is an optimized and simplified version, necessary due to the the maximum file size in GitHub.
 
 ![Unity Simulator Web Capture](./Unity_simulator_web_capture.png)
