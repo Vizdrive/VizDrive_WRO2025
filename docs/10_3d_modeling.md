@@ -51,7 +51,7 @@ VizDrive's mechanical design prioritizes precise and stable locomotion, integrat
 
 <img src="./../assets/model_photos/caster_angle.png" width="500">
 
-* **Steering Angle Capability**: The steering system is designed to achieve a **45-degree turn in each direction**. This range enables sharp maneuvers, including specialized actions like parallel parking.
+* **Steering Angle Capability**: The steering system is designed to achieve a **55-degree turn in each direction**. This range enables sharp maneuvers, including specialized actions like parallel parking.
 
 <img src="./../assets/model_photos/steering_angle.png" width="500">
 
