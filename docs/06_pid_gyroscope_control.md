@@ -74,7 +74,7 @@ float gyroZ_offset = 0.0; // Z-axis gyroscope offset for calibration (in degrees
 
 ## 6.2 Fundamentals of PID Control
 
-A Proportional-Integral-Derivative (PID) controller is a widely used feedback control loop mechanism. It continuously calculates an "error" value as the difference between a desired setpoint (target) and a measured process variable (current state). The controller then attempts to minimize this error by adjusting the process control inputs.
+The integral term accumulates error over time to eliminate steady-state offset and overcome persistent opposing forces as friction or gravity. However, our steering mechanism experiences no physical resistance or force that prevents it from turning. Because our system is high-dynamic and operates in short, real-time intervals, error accumulation is unnecessary and could result in severe overcorrection or overshoot. Thus, we exclude the integral term (Ki = 0) and switch to a proportional and derivative term controller.
 
 * **P (Proportional) Term**:
   * **Function**: Reacts to the *current* error.
