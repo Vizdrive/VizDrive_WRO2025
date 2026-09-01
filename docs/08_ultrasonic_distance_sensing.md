@@ -231,7 +231,8 @@ This function implements a conditional recentering mechanism designed to adjust 
      * `if(distance == 0) return;`: The function ends if the ultrasonic sensor does not detect anything.
        
   4. **Lateral PD Control**: Computes the proportional-derivative correction needed to maintain a steady 20 cm from the wall.
-     
+ 
+     * Introducing a second PD controller converts the logic into a **cascaded control architecture**. This controller also eliminates the integral term, for it directly affects a virtual value (`turnTargetYaw`) which is is purely computational, and has no persistent errors: corrections are instant. `turnTargetYaw` does not affect a physical actuator; thus, the integral term is excluded to avoid overshooting and additional complexity.
      * `float error = distance - 20;`: Estimates error to maintain 20 cm distance from the wall.
      * `float derivative = error - S_previousError;`: Calculates derivative, which tells how much the error has changed since last time.
      * `int correction = constrain((int)(S_Kp * error + S_Kd * derivative), -10, 10);`: Computes the PD correction value using the proportional and derivative; afterwards, it  limits the result between −10 and +10.
@@ -245,7 +246,7 @@ This function implements a conditional recentering mechanism designed to adjust 
      * `lastCorrection = correction;`: Updates the stored correction value to the new one.
      * `currentCorrectionAmount = currentCorrectionAmount - err;`: Adjusts the stored correction values.
        
-  6. **New Target Yaw Application**: Applies the updated yaw target so the robot can steer toward the corrected orientation.
+ 6. **New Target Yaw Application**: Applies the updated yaw target so the robot can steer toward the corrected orientation.
      
      * `setTargetYaw(turnTargetYaw);`: Sets a new target yaw, enabling the robot to steer accordingly.
        
