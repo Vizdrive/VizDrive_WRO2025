@@ -129,7 +129,7 @@ const float Ki = 0.0; // Integral gain (inactive)
 
 ### Exclusion of Integral Term (`Ki = 0`)
 
-The integral term (`Ki`) is set to zero because the control loop operates in very short, real-time intervals. In this context, persistent, cumulative errors are negligible, and the system is highly dynamic. Introducing an integral term, which primarily addresses long-term steady-state errors, would be unnecessary and could introduce instability or over-correction due to wind-up effects.
+The integral term (`Ki`) is set to zero because the control loop operates in very short, real-time intervals. In this context, no persistent lateral bias forces are present, and the system is highly dynamic. Introducing an integral term, which primarily addresses long-term steady-state errors, would be unnecessary and could introduce instability or over-correction due to wind-up effects.
 
 ### PID Constants Tuning
 
