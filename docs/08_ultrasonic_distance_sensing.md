@@ -246,7 +246,7 @@ This function implements a conditional recentering mechanism designed to adjust 
      * `lastCorrection = correction;`: Updates the stored correction value to the new one.
      * `currentCorrectionAmount = currentCorrectionAmount - err;`: Adjusts the stored correction values.
        
- 6. **New Target Yaw Application**: Applies the updated yaw target so the robot can steer toward the corrected orientation.
+  6. **New Target Yaw Application**: Applies the updated yaw target so the robot can steer toward the corrected orientation.
      
      * `setTargetYaw(turnTargetYaw);`: Sets a new target yaw, enabling the robot to steer accordingly.
        
@@ -271,6 +271,74 @@ if(distance == 0) return;
 ```
 This effectively “nudges” the robot’s heading so that it moves slightly away from or closer to the wall.
 
+## 8.5 Side Proportional control for the **Challenge Round** (**Advanced `recentreIfNeeded`**)
+
+* **Purpose**: The `recentreIfNeeded()` function that includes a Proportional control is purposed to slowly regain central trajectory by applying a slight correction depending on the robot's current track position.
+
+* **Operation**:
+  1. **Conditions**: Similarly to `avoidWall()`, this only runs when:
+
+    * A half second has passed `(now - lastUpdateTimeCorr < 500)`, running in intervals of 500 milliseconds to avoid MPU drift due to constant ultrasonic measuerements that slightly delay the system.
+    * Correction has not been applied for the latest obstacle `if (correctionApplied) return;`.
+         
+    ```cpp
+    unsigned long now = millis(); 
+  
+    if (now - lastUpdateTimeCorr < 500) return;  // Executes every half second to avoid MPU drift
+  
+      if (correctionApplied) {
+        // digitalWrite(ledPin, HIGH); // Debugging
+        return;  // correction is already applied
+      }
+    ```
+
+  2. **Defining Variables and Sensing Distance**: The program defines the sensor according to the latest obstacle and retrieves distance data.
+
+    * The main distance variable is defined `int distanceWall = 0;`
+    * Ultrasonic sensor is chosen, depending on the obstacle's signature 
+
+    ```cpp
+    if (lastSignature == SIGNATURE_RED) {
+      distanceWall = sonarRight.ping_cm(); // The obstacle is RED, evades right, thus we use the right sensor.
+    } 
+    else if (lastSignature == SIGNATURE_GREEN) {
+      distanceWall = sonarLeft.ping_cm(); // The obstacle is GREEN, evades left, thus we use the left sensor.
+    } 
+    else {
+      return; 
+    }
+    ```
+
+  3. **Calculating Correction**: If the wall is near (less or equal than 24 cm), a precise amount is calculated for proper recentering.
+   
+    * `if (distanceWall > 0 && distanceWall <= 24)` establishes the initial condition before calculating correction; the robot must be near the wall.
+    * The robot then proceeds to perform the correciton calculation
+
+    ```cpp
+    // Linear proportion: a 10cm or less -> factor 1.0 (12 + 5 = 17° max). at 50cm -> factor 0.0 (5° default).
+    float factor = (50.0 - distanceWall) / 40.0;
+    factor = constrain((factor), 0.0, 1.0);
+
+    // Calculate magnitude
+    correctionAmount = (12.0 * factor)+5.0;
+    ```
+
+  4. **Constant Correction**: If the robot is very far from the wall (greater than 24 cm), the system will simply apply a small, constant correction, avoiding an unstable, long distance ultrasonic measurement. This avoids long readings and unnecesary calculation for this circumstances.
+
+    * `distanceWall > 24 && distanceWall < 50` makes sure the correction is applied if there is a visible wall. Ultrasonic sensors may detect other objects or other walls that exceed 50 cm, mistakenly performing the wrong recentering maneuver.
+    * `correctionAmount = 5.0;` sets the constant correction to the variable.
+
+  5. **Applying Correction**: The final value is then assigned to the global variable `correctionAmount` according to the last obstacle evaded, and `targetYaw` is changed.
+
+    ```cpp
+    if (lastSignature == SIGNATURE_GREEN) {
+      correctionAmount = -correctionAmount;
+    } 
+    setTargetYaw(targetYaw + correctionAmount);
+    // digitalWrite(ledPin, HIGH);
+    correctionApplied = true;
+    ```
+    
 ---
 
 [Back to Main README.md Index](./../README.md)
