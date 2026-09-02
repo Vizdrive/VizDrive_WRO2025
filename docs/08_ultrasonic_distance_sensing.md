@@ -271,7 +271,7 @@ if(distance == 0) return;
 ```
 This effectively “nudges” the robot’s heading so that it moves slightly away from or closer to the wall.
 
-## 8.5 Side Proportional control for the **Challenge Round** (**Advanced `recentreIfNeeded`**)
+## 8.6 Side Proportional control for the **Challenge Round** (**Advanced `recentreIfNeeded()`**)
 
 * **Purpose**: The `recentreIfNeeded()` function that includes a Proportional control is purposed to slowly regain central trajectory by applying a slight correction depending on the robot's current track position.
 
