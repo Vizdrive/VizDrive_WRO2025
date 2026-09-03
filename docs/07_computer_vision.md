@@ -346,7 +346,7 @@ An `activeSignature` flag is present to execute the function once, optimizing th
 It finishes the evasion maneuver and breaks the evasion applying sideways correction, explained in [**Ultrasonic Distance Sensing**](./08_ultrasonic_distance_sensing.md).
 
 ```cpp
-// 2. exit condition calculated inside the OpenMV's logic
+    // 2. exit condition calculated inside the OpenMV's logic
     if (visionCommand == 'C') { // Exit Evasion
       
       if (activeSignature == SIGNATURE_RED) {
