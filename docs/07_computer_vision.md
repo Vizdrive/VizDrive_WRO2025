@@ -16,12 +16,13 @@ Overview of the camera's setup and code.
 All required libraries are imported, serial communication to the Mega is established through `UART3` (OpenMV) and `SERIAL1` (Mega). LEDs in the camera are defined, for they are used as block detection indicators for easier debugging. Pixel format and frame size are set up for optimal LAB blob detection.
 
 ```py
-# ===== OpenMV Color Tracking Script =====
+from pyb import UART, LED
+import sensor, image, time, mjpeg
 
-# import required libraries and modules for hardware interfacing, image processing, and timing
-from pyb import UART, LED 
-import sensor, image, time
+# Parabolic calculation
+y_threshold = 119 * 0.60
 
+# ====================== Peripherals ======================
 # Initialize serial communication (UART)
 # UART 3 at 115200 bps for communication.
 uart = UART(3, 115200)
@@ -30,24 +31,24 @@ uart = UART(3, 115200)
 red_led = LED(1)
 green_led = LED(2)
 
+# ====================== Camera Config ======================
 # Reset and initialize the camera sensor hardware
 sensor.reset()
-
 # Configure pixel format to RGB565 (16-bit per pixel, Red-Green-Blue)
 sensor.set_pixformat(sensor.RGB565)
-
 # Configure frame size to QQVGA (Quarter Quarter Video Graphics Array: 160x120 pixels)
-sensor.set_framesize(sensor.QQVGA)
+sensor.set_framesize(sensor.QQVGA) # res: 160x120
 
+# - Parameter blocking -
 # Disable Automatic Gain Control (AGC) to ensure deterministic color evaluation
 sensor.set_auto_gain(False)
 
 # Disable Automatic White Balance (AWB) and lock precise digital RGB gains 
 # to maintain color consistency across variable environmental illumination
-sensor.set_auto_whitebal(False, rgb_gain_db=[62.0, 60.0, 62.0])
+sensor.set_auto_whitebal(False, rgb_gain_db=[40.0, 38.0, 40.0])
 
-# Disable Automatic Exposure Control (AEC) and set static exposure to 25,000 microseconds
-sensor.set_auto_exposure(False, exposure_us=25000)
+# Disable Automatic Exposure Control (AEC) and set static exposure 
+sensor.set_auto_exposure(False, exposure_us=50000)
 
 # Allow sensor clock and automatic adjustments to stabilize over a 2000ms window
 sensor.skip_frames(time=2000)
@@ -65,13 +66,15 @@ Main color thresholds are established for red and green blobs using LAB color sp
 ```py
 # COLOR THRESHOLDS (CIE L*a*b* COLOR SPACE)
 # Red Threshold:
-red_threshold = (0, 100, 17, 127, 21, 127)
+red_threshold = (10, 90, 17, 127, 21, 120)
 # Hue boundaries for red chrominance validation
 RED_H_MIN = 0
-RED_H_MAX = 15
+RED_H_MAX = 20
 
 # Green Threshold:
-green_threshold = (0, 91, -128, -12, -35, 49)
+green_threshold = (10, 91, -128, -12, -35, 40)
+
+uart.write("a") #======================== SETUP FINISHED - Confirm Message
 
 # Validates whether a detected blob conforms to true red chrominance criteria by converting its centroid pixel to the HSV color space.
 def is_true_red(img, blob):
@@ -101,6 +104,27 @@ def is_true_red(img, blob):
     return (h_scaled <= RED_H_MAX)
 ```
 
+#### Anti-Jittering
+
+To eliminate single-frame detection noise caused by camera shake or lighting shifts, this function uses a 3-frame rolling window. It returns the majority state across the sample count.
+
+state_history = ['C', 'C', 'C']
+
+```py
+def update_and_get_filtered_state(new_state):
+    # Displace history and add new data
+    state_history.pop(0)
+    state_history.append(new_state)
+    
+    # Votation for majority: if 'R' or 'G' appear 2 o or more times, send true; else, 'C'.
+    if state_history.count('R') > 1:
+        return 'R'
+    elif state_history.count('G') > 1:
+        return 'G'
+    else:
+        return 'C'
+```
+
 #### Blob Detection and Y-Bound Filter
 
 This is the main loop, it reads the sensor information and runs two separate blob detection functions, this is due to the limitations of a single function performing two readings at the same time: if both blobs are together, or overlap, none are returned from the function, so the two-function approach was chosen. The only difference between the red and green function is in the hue factor, which is only applied to the red blob detection function. For all blobs inside the sensor frame, only the ones inside the Y-bound ROI are taken into consideration, and elected as **candidates**.
@@ -120,19 +144,19 @@ while True:
     # Initialize list to filter and collect candidate targets
     candidates = []
 
-    # Process and filter detected red blobs
+    # Apply y_filter only if required
     for blob in red_blobs:
-        # Enforce Hue validation and structural spatial filtering (excluding the upper horizon)
-        if (is_true_red(img, blob) and blob.cy() > (119 / 6)):
-            candidates.append(("2", blob)) 
-            
-        # Protocol key "2" designates a validated red target
+        if is_true_red(img, blob):
+            if not apply_y_filter or blob.cy() > y_threshold:
+                candidates.append(("R", blob))
 
-    # Process and filter detected green blobs
     for blob in green_blobs:
-        # Enforce spatial filtering based on the horizon threshold
-        if blob.cy() > (119 / 6):
-            candidates.append(("1", blob))  # Protocol key "1" designates a validated green target
+        if not apply_y_filter or blob.cy() > y_threshold:
+            candidates.append(("G", blob))
+
+    raw_state = 'C'
+    active_blob = None
+    active_color = None
 
     # Default State: Ensure status indicators are darkened prior to target processing
     red_led.off()
@@ -141,46 +165,63 @@ while True:
 
 #### Size Filtering and Data Transmission
 
-This function is inside the main loop, and it filters out the prevously elected candidates, keeping only the one with the largest area. After the final blob is elected, the message is constructed, consisting of 3 values: signature number, X-position, and Y-position. `(color, cx, cy)` and proceeds to send the message of the classified block through UART Serial communication.
+This function is inside the main loop, and it filters out the prevously elected candidates, keeping only the one with the largest area. After the final blob is elected, the camera checks if the block is in the safe-zone or in the region of interest, and commands the right maneuver, optimizing the route if possible. The message is then constructed, consisting of a single character, and proceeds to send the message of the classified block through UART Serial communication.
 
 ```py
-    # Process localized candidates if any have passed primary filtering criteria
-    if len(candidates) > 0:
-
-        # Select the dominant target based on the maximum pixel area metric
+    if len(candidates) > 0: # more than 1 blob is detected
+        # Blob with the most area is selected
         color, blob = max(candidates, key=lambda item: item[1].pixels())
-
-        # Extract structural bounding dimensions and centroid coordinates
-        x, y, w, h = blob.rect()
         cx, cy = blob.cx(), blob.cy()
 
-        # Target Specific Processing: Red Classification
-        if color == "2":
-            # Render descriptive user interface graphics on the image buffer
-            img.draw_rectangle(blob.rect(), color=(255, 0, 0))
-            img.draw_cross(cx, cy, color=(255, 0, 0))
-            img.draw_string(x, y, "RED", color=(255, 0, 0))
+        # Checks if maneuver is necessary
+        if color == "R":
+            if cx < LEFT_SECTION_END_X:
+                # Evasion is NOT required - optimize route
+                raw_state = 'C'
+            else:
+                # Evasion is required - evade obstacle
+                raw_state = 'R'
+                active_blob = blob
+                active_color = "R"
 
-            # Actuate corresponding hardware visual feedback indicators
-            red_led.on()
-            green_led.off()
+        # Checks if maneuver is necessary        
+        elif color == "G":
+            if cx > RIGHT_SECTION_START_X:
+                # Evasion is NOT required - optimize route
+                raw_state = 'C'
+            else:
+                # Evasion is required - evade obstacle
+                raw_state = 'G'
+                active_blob = blob
+                active_color = "G"
+ # --- APLICAR FILTRO DE ESTABILIZACIÓN ---
+    current_state = update_and_get_filtered_state(raw_state)
 
-        # Target Specific Processing: Green Classification
-        else:
-            # Render descriptive user interface graphics on the image buffer
-            img.draw_rectangle(blob.rect(), color=(0, 255, 0))
-            img.draw_cross(cx, cy, color=(0, 255, 0))
-            img.draw_string(x, y, "GREEN", color=(0, 255, 0))
-
-            # Actuate corresponding hardware visual feedback indicators
-            green_led.on()
-            red_led.off()
-
-        # Transmit comma-separated telemetry payload over the serial interface
-        uart.write("{},{},{}\n".format(color, cx, cy))
+    # --- GESTIÓN DE LEDS Y VISUALIZACIÓN SEGÚN ESTADO FILTRADO ---
+    red_led.off()
+    green_led.off()
         
     # Output runtime diagnostics to the serial debugging terminal
     print("FPS:", clock.fps())
+    # Envío de datos por UART al otro microcontrolador
+    uart.write("{}\n".format(current_state))
+```
+
+#### Debugging
+
+Simple debugging for recording and IDE visualization.
+
+```py
+    if current_state == 'R' and active_blob:
+        red_led.on()
+        img.draw_rectangle(active_blob.rect(), color=(255, 0, 0))
+        img.draw_cross(active_blob.cx(), active_blob.cy(), color=(255, 0, 0))
+        img.draw_string(active_blob.x(), active_blob.y(), 'R', color=(255, 0, 0))
+    elif current_state == 'G' and active_blob:
+        green_led.on()
+        img.draw_rectangle(active_blob.rect(), color=(0, 255, 0))
+        img.draw_cross(active_blob.cx(), active_blob.cy(), color=(0, 255, 0))
+        img.draw_string(active_blob.x(), active_blob.y(), 'G', color=(0, 255, 0))
 ```
 
 ### Main Control Configuration
@@ -192,10 +233,15 @@ Overview of the Mega's setup and code.
   * **Purpose**: Establishes serial communication with the OpenMV.
   * **Operation**:
       * `Serial1.begin(115200);`: Initializes serial communication at 115200 baud rate.
+      * Waits until the OpenMV is fully initialized, and sends a message `uart.write("a")`.
 
 ```cpp
 void initVision() {
   Serial1.begin(115200);
+  while(!Serial) delay(100);
+  while(Serial.available() )
+  delay(1000);
+  Serial.flush();
   delay(100);
   Serial.println("Artificial vision initialized...");
 }
@@ -205,47 +251,31 @@ void initVision() {
 
   * **Purpose**: Checks if an obstacle classified to be evaded is available.
   * **Operation**:
-      * `return Serial1.available();`: Sends "true" whenever there is data coming from the camera.
+      * `return (visionComand);`: Sends "true" whenever there is and evasion instruction coming from the camera.
 
 ```cpp
 // Checks if any part of any detected block is within the crucial lower region (below ROI_Y_BOUND).
 bool obstacleDetected() {
-  return Serial1.available();
+  readVision();
+  return (visionCommand == 'R' || visionCommand == 'G');
 }
 ```
 
-#### Data Retrieval (`void readBlock()`)
+#### Data Retrieval (`void readVision()`)
 
   * **Purpose**: Establishes serial communication with the OpenMV.
   * **Operation**:
-      * Checks if there is data available `Serial1.available() > 0` and then retrieves the data avaiable `Serial1.readStringUntil('\n')`.
-      * Locates the commas that separate the messages data: signature, X-position, and Y-position.
-      * Assigns the data to variables containing block information.
+      * Checks if there is data available `Serial1.available() > 0` and then retrieves the data avaiable `char c = Serial1.read();`.
+      * Checks for the single-character data that are true instructions, filtering out possible noise.
+      * Assigns the data to `visionCommand` variable.
 
 ```cpp
-// Block data variables
-int currentColor;
-int currentX;
-int currentY;
-
-// Reads blocks
-bool readBlock() {
-  if (Serial1.available() > 0) {
-    // Read the string until a newline character
-    String data = Serial1.readStringUntil('\n');
-    // Find the commas to split the string
-    int firstComma = data.indexOf(',');
-    int secondComma = data.indexOf(',', firstComma + 1);
-    // Assign block data to variables
-    if (firstComma != -1 && secondComma != -1) {
-      currentColor = data.substring(0, firstComma).toInt();;
-      currentX = data.substring(firstComma + 1, secondComma).toInt();
-      currentY = data.substring(secondComma + 1).toInt();
+void readVision() {
+  while (Serial1.available() > 0) {
+    char c = Serial1.read();
+    if (c == 'R' || c == 'G' || c == 'D' || c == 'C') {
+      visionCommand = c;
     }
-    return true;
-  }
-  else {
-    return false;
   }
 }
 ```
@@ -265,7 +295,75 @@ void clearSerial() {
 }
 ```
 
----
+### Obstacle Evasion Logic - OpenMV (`void handleEvasion()`)
+
+#### Initiation and Data Update
+
+After confirming an active obstacle using `obstacleDetected()`, the evasion protocol initializes core variables and enters the main execution loop. On each iteration, the function refreshes the evasion instructions by reading `visionCommand`, updates orientation via `updateOrientation()`, and refreshes floor line data through `detectFloorColor()`. If a colored line is detected, the function executes handleColorAction() and breaks out of the loop to terminate the evasion maneuver.
+         
+```cpp
+  if (!obstacleDetected()) return; // Validates active obstacle
+
+  Serial.println("--- EVASION PROTOCOL INITIATED ---");
+  int activeSignature = 0; 
+
+  while (true) {
+    readVision(); // Updates 'visionCommand'
+    updateOrientation();
+
+    if (detectFloorColor()) {
+      handleColorAction();
+      break;
+    }
+```
+
+#### Evasion Maneuver
+
+An `activeSignature` flag is present to execute the function once, optimizing the loop. If no active signature is present, thee cases are possible: evade right, left, or go straight. After setting steering direction, it assigns the block's color to `activeSignature`.
+
+```cpp
+    // 1. Assign signatureValue if it is the fist instance of the loop with a block
+    if (activeSignature == 0) {
+      if (visionCommand == 'R') {
+        activeSignature = SIGNATURE_RED;
+        setSteeringAngle(SERVO_RIGHT); // Evade red to the right
+        Serial.println("Obstacle is RED. Evading RIGHT.");
+      } else if (visionCommand == 'G') {
+        activeSignature = SIGNATURE_GREEN;
+        setSteeringAngle(SERVO_LEFT); // Evade green to the left
+        Serial.println("Obstacle is GREEN. Evading LEFT.");
+      } else {
+        setSteeringAngle(SERVO_STRAIGHT);
+        lastSignature = 0;
+        Serial.println("Unknown signature. Aborting evasion.");
+        break; 
+      }
+    }
+```
+
+#### Finish Evasion
+
+It finishes the evasion maneuver and breaks the evasion applying sideways correction, explained in [**Ultrasonic Distance Sensing**](./08_ultrasonic_distance_sensing.md).
+
+```
+// 2. exit condition calculated inside the OpenMV's logic
+    if (visionCommand == 'C') { // Exit Evasion
+      
+      if (activeSignature == SIGNATURE_RED) {
+        if (lastSignature != 0) resetYawCorrection(); // Reset correction if previous correction has been applied
+        Serial.println("Evasion successful. Red block is safe.");
+        lastSignature = SIGNATURE_RED; // Assign Signature Value
+        if (safeDelayColor(400)) break; // If floor line is detected, break
+
+        setSteeringAngle(SERVO_LEFT-5); // Pivoting maneuver, depending on yaw error
+        if (getAbsoluteYawError() > 65){ if (safeDelayColor(1200)) break; } 
+        else if (getAbsoluteYawError() > 35){ if (safeDelayColor(900)) break; } 
+        else { if (safeDelayColor(500)) break; } // If floor line is detected, break
+        
+        break; 
+      } 
+    }
+```
 
 ## 7.2 PixyCam 2.1 for Vision-Based Obstacle Evasion
 
@@ -347,7 +445,7 @@ However, we later found an unsolved **bug** in PixyCam's software; tuning parame
 
 Besides the mentioned software problem, the combination of a poor camera sensor and poor AWB worsened the camera brightness problem. It was extremely hard to find the right balance between red and green, green being the much darker color, shown as almost black, compared to the excessively bright red objects.
 
-## 7.3 Obstacle Evasion Logic (`void handleEvasion()`)
+### Obstacle Evasion Logic - Pixy (`void handleEvasion()`)
 
   * **Purpose**: Manages the robot's steering to actively evade a detected obstacle, continuing until the path is clear.
   * **Operation**:
